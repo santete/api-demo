@@ -1,3 +1,4 @@
+```mermaid
 sequenceDiagram
   participant User
   participant FPT ID (Auth Server)
@@ -13,3 +14,4 @@ sequenceDiagram
   FPT ID-->>Client App: access_token, id_token
   Client App->>Client App: Tạo session người dùng
   Client App->>User: Redirect đến /dashboard
+```
