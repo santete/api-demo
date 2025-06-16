@@ -66,6 +66,25 @@ Chuẩn hóa định dạng phản hồi của tất cả API trong hệ thống
 ---
 
 ## 🛠️ Lỗi kỹ thuật (do hệ thống / middleware handle)
+```json
+{
+  "success": false,
+  "data": null,
+  "error": {
+    "code": "SYS_500",
+    "message": "Internal server error. Please try again later.",
+    "details": {
+      "field": "Can not connect database."
+    },
+    "retryable": true
+  },
+  "meta": {
+    "request_id": "req-hij-999",
+    "trace_id": "trace-klm-000",
+    "timestamp": "2025-06-16T09:02:00Z"
+  }
+}
+```
 
 | HTTP Code | Tên lỗi               | Mô tả thực tế                                                 |
 |-----------|------------------------|----------------------------------------------------------------|
