@@ -19,7 +19,7 @@ Chuẩn hóa định dạng phản hồi của tất cả API trong hệ thống
 {
   "success": true,
   "data": {
-    "userId": 123,
+    "user_id": 123,
     "username": "john.doe"
   },
   "error": null,
@@ -31,13 +31,46 @@ Chuẩn hóa định dạng phản hồi của tất cả API trong hệ thống
 }
 ```
 
+## ✅ Phản hồi thành công với phân trang (`success = true`)
+
+```json
+{
+  "success": true,
+  "data": [
+    { "user_id": "u123", "name": "Nguyễn Văn A" },
+    { "user_id": "u124", "name": "Trần Thị B" }
+  ],
+  "error": null,
+  "meta": {
+    "pagination": {
+      "page": 1,
+      "limit": 10,
+      "total_items": 42,
+      "total_pages": 5,
+      "has_next": true,
+      "has_prev": false
+    },
+    "request_id": "req-xyz-111",
+    "trace_id": "trace-abc-222",
+    "timestamp": "2025-06-16T09:03:00Z"
+  }
+}
+```
+
 | Trường     | Bắt buộc | Ý nghĩa                                                                 |
 |------------|----------|------------------------------------------------------------------------|
 | `success`  | ✅        | Luôn là `true` nếu thành công                                           |
+| `data`     | ✅        | Payload trả về – object/array/null                                     |
+| `error`     | ✅        | Cấu trúc lỗi trả về nếu có phát sinh                                     |
 | `code`     | ✅        | Mã kết quả nội bộ – tham khảo `error_codes.md`                         |
 | `message`  | ✅        | Mô tả dễ hiểu, có thể hiển thị hoặc log                                 |
-| `data`     | ✅        | Payload trả về – object/array/null                                     |
-| `traceId`  | ✅        | ID để trace xuyên suốt request, log, monitor                           |
+| `details`     | ✅        | Chi tiết lỗi – object/array/null                                     |
+| `retryable`     | ✅        | Xác định khả thi retry cho client                                     |
+| `meta`     | ✅        | Cấu trúc thông tin mô tả thêm                                     |
+| `pagination`     | ✅        | Cấu trúc thông tin phân trang                                    |
+| `request_id`  | ✅        | ID để định danh request bất kỳ khi phát sinh                           |
+| `trace_id`  | ✅        | ID để trace xuyên suốt hệ thống phân tán micro-service                           |
+| `timestamp`  | ✅        | Thời điểm cụ thể khi phát sinh response                           |
 
 ---
 
