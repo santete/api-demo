@@ -26,7 +26,7 @@ Ngôn ngữ chính: **.NET Core**, tuy nhiên nguyên tắc mang tính **ngôn n
 | Biến private              | `_camelCase`   | `_userRepository` |
 | Hàm              | `PascalCase`   | `CalculateTotal()`, `GetUser()` |
 | Class            | `PascalCase`   | `UserService`, `TokenHandler` |
-| Conts            | `ALL_CAPS`   | `DEFAULT_TIMEOUT` |
+| Const            | `ALL_CAPS`   | `DEFAULT_TIMEOUT` |
 | Enum     | `PascalCase`   | `UserType.Admin` |
 | Interface        | `I` + `PascalCase`   | `IUserService`, `IMiddleware` |
 | Tên file `.cs`   | Trùng tên class| `LoginController.cs`          |
