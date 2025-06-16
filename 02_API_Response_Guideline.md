@@ -98,7 +98,7 @@ Chuẩn hóa định dạng phản hồi của tất cả API trong hệ thống
 
 ---
 
-## 🛠️ Phản hồi lỗi kỹ thuật (4xx - 5xx)
+## ❌ Phản hồi lỗi kỹ thuật (4xx - 5xx)
 ```json
 {
   "success": false,
