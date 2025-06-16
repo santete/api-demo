@@ -98,7 +98,7 @@ Chuẩn hóa định dạng phản hồi của tất cả API trong hệ thống
 
 ---
 
-## 🛠️ Lỗi kỹ thuật (do hệ thống / middleware handle)
+## 🛠️ Phản hồi lỗi kỹ thuật (4xx - 5xx)
 ```json
 {
   "success": false,
@@ -132,7 +132,7 @@ Chuẩn hóa định dạng phản hồi của tất cả API trong hệ thống
 | `502`     | Bad Gateway            | Lỗi proxy hoặc service upstream                               |
 | `503`     | Service Unavailable    | Server quá tải, ngắt kết nối hoặc đang bảo trì                |
 
-> ✅ Những lỗi trên sẽ được middleware handle, Dev không cần viết tay.
+> ✅ Những lỗi trên nên được `middleware handle` trả code `httpStatus` chính xác tránh gây ảnh hưởng đến biz-flow của client
 
 ---
 
@@ -140,7 +140,7 @@ Chuẩn hóa định dạng phản hồi của tất cả API trong hệ thống
 
 | Loại lỗi  | HTTP Code | Cách xử lý                            |
 |-----------|-----------|----------------------------------------|
-| Kỹ thuật  | 4xx / 5xx  | Middleware tự động xử lý               |
+| Kỹ thuật  | 4xx / 5xx  | Middleware chủ động xử lý verify lại trước khi trả về client              |
 | Nghiệp vụ | 200 OK     | Dev xử lý và trả về `success = false` |
 
 ---
@@ -170,24 +170,37 @@ Chuẩn hóa định dạng phản hồi của tất cả API trong hệ thống
 
 ---
 
-## ⏱️ Lỗi nghiệp vụ (Do Dev xử lý thủ công)
+## ⏱️ Lỗi nghiệp vụ (Do Dev xử lý thông tin chi tiết)
 
-Lỗi nghiệp vụ là lỗi liên quan đến logic hệ thống hoặc nghiệp vụ như:  
+Lỗi nghiệp vụ là lỗi liên quan đến logic nghiệp vụ như:  
 OTP sai, tài khoản bị khóa, vi phạm điều kiện...
 
 - HTTP status: `200 OK`
 - `success`: `false`
+- `error`: mô tả cấu trúc lỗi rõ ràng, đầy đủ
 - `code`: mã lỗi nội bộ
 - `message`: rõ ràng, dễ hiểu
-- `traceId`: để trace log
+- `details`: chi tiết lỗi hoặc danh sách chi tiết
+- `trace_id`: để trace log
 
 ### Ví dụ:
 ```json
 {
   "success": false,
-  "code": "INVALID_OTP",
-  "message": "Mã OTP không hợp lệ hoặc đã hết hạn",
-  "traceId": "xyz-789"
+  "data": null,
+  "error": {
+    "code": "VALIDATION_FAILED",
+    "message": "Missing required field 'product_id'.",
+    "details": {
+      "field": "product_id"
+    },
+    "retryable": false
+  },
+  "meta": {
+    "request_id": "abc-uuid",
+    "trace_id": "trace-uuid",
+    "timestamp": "2025-06-11T14:46:00Z"
+  }
 }
 ```
 
@@ -198,12 +211,12 @@ OTP sai, tài khoản bị khóa, vi phạm điều kiện...
 | Tiêu chí kiểm tra                                     | Trạng thái | Ghi chú                                     |
 |--------------------------------------------------------|------------|---------------------------------------------|
 | Trả `success = true` khi xử lý thành công              | ✅         | Bắt buộc                                    |
-| Trả `success = false` khi xảy ra lỗi nghiệp vụ         | ✅         | Dùng đúng `code`, `message`, `traceId`      |
+| Trả `success = false` khi xảy ra lỗi nghiệp vụ         | ✅         | Dùng đúng `code`, `message`, `trace_id`      |
 | Không dùng `throw` cho lỗi nghiệp vụ                   | ✅         | Tránh crash không cần thiết                 |
-| Middleware xử lý lỗi kỹ thuật (4xx/5xx)                | ✅         | Không cần xử lý thủ công                    |
-| Luôn có `traceId` trong mọi response                   | ✅         | Dùng để trace log & monitoring              |
+| Middleware xử lý lỗi kỹ thuật (4xx/5xx)                | ✅         | Chủ động verify trước khi trả về client                    |
+| Luôn có `trace_id` trong mọi response                   | ✅         | Dùng để trace log & monitoring              |
 | Dùng `code` từ `error_codes.md`                        | ✅         | Không tự đặt mã lỗi                         |
-| Không trả HTTP 200 nếu là lỗi kỹ thuật                 | ✅         | Chỉ dùng 200 cho lỗi nghiệp vụ              |
+| Không trả HTTP 200 nếu là lỗi kỹ thuật                 | ✅         | Chỉ có thể 200 cho lỗi nghiệp vụ              |
 
 ---
 
@@ -213,7 +226,9 @@ OTP sai, tài khoản bị khóa, vi phạm điều kiện...
   Ví dụ: `AUTH_401`, `USR_200`, `OTP_423`, `SYS_500`
 - Mỗi API cần có mô tả chi tiết bằng OpenAPI YAML (.yaml)  
   Đặt tại thư mục: `docs/api/openapi/`
-- `traceId` nên được sinh ra từ gateway hoặc service đầu tiên để giữ consistency
+- `request_id` nên được sinh ra từ gateway API hoặc entry endpoint để giữ consistency
+- `trace_id` nên được sinh ra bởi tracing system(ví dụ: Opentelemetry)
+- Nên dùng snake_case để viết các input/output thuộc tính API
 
 ---
 
@@ -228,11 +243,11 @@ OTP sai, tài khoản bị khóa, vi phạm điều kiện...
 
 | Mục kiểm                              | Bắt buộc | Ghi chú                                                |
 |--------------------------------------|----------|--------------------------------------------------------|
-| Đúng format JSON response            | ✅       | `success`, `code`, `message`, `traceId`               |
+| Đúng format JSON response            | ✅       | `success`, `code`, `message`, `trace_id`               |
 | Dùng đúng mã lỗi chuẩn               | ✅       | Tham khảo `error_codes.md`                            |
 | Có YAML mô tả API (OpenAPI 3.0)      | ✅       | File đặt tại `docs/api/openapi/`                      |
-| Có `traceId` trong mọi phản hồi      | ✅       | Bắt buộc để trace lỗi chính xác                       |
-| Không dùng HTTP 200 cho lỗi hệ thống| ✅       | 200 chỉ dành cho thành công hoặc lỗi nghiệp vụ        |
+| Có `trace_id` trong mọi phản hồi      | ✅       | Bắt buộc để trace lỗi chính xác                       |
+| Không dùng HTTP 200 cho lỗi hệ thống| ✅       | 200 chỉ dành cho thành công hoặc lỗi nghiệp vụ khác 4xx       |
 
 ---
 
@@ -245,20 +260,13 @@ OTP sai, tài khoản bị khóa, vi phạm điều kiện...
 ---
 
 📌 Kết luận
-Một response API nhất quán nên:
-
-Chuẩn hóa cấu trúc (success, data, error, meta)
-
-Sử dụng đúng HTTP Status Code
-
-Có error code rõ ràng
-
-Có request_id để trace
-
-Phân biệt lỗi retry / không retry
-
-Không tiết lộ lỗi nội bộ
-
+- Một response API nhất quán nên:
+- Chuẩn hóa cấu trúc (success, data, error, meta)
+- Sử dụng đúng HTTP Status Code
+- Có error code rõ ràng
+- Có request_id, trace_id để trace
+- Phân biệt lỗi retry / không retry
+- Không tiết lộ lỗi nội bộ
 
 ## 📚 Tài liệu liên quan
 
