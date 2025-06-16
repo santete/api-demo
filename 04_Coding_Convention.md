@@ -22,11 +22,13 @@ Ngôn ngữ chính: **.NET Core**, tuy nhiên nguyên tắc mang tính **ngôn n
 
 | Thành phần      | Quy ước       | Ví dụ                         |
 |------------------|----------------|-------------------------------|
-| Biến             | `camelCase`    | `isActive`, `totalAmount`     |
+| Biến toàn cục             | `camelCase`    | `isActive`, `totalAmount`     |
+| Biến private              | `_camelCase`   | `_userRepository` |
 | Hàm              | `PascalCase`   | `CalculateTotal()`, `GetUser()` |
 | Class            | `PascalCase`   | `UserService`, `TokenHandler` |
-| Const / Enum     | `PascalCase`   | `DefaultTimeout`, `UserType.Admin` |
-| Interface        | `I` + Pascal   | `IUserService`, `IMiddleware` |
+| Conts            | `ALL_CAPS`   | `DEFAULT_TIMEOUT` |
+| Enum     | `PascalCase`   | `DefaultTimeout`, `UserType.Admin` |
+| Interface        | `I` + `PascalCase`   | `IUserService`, `IMiddleware` |
 | Tên file `.cs`   | Trùng tên class| `LoginController.cs`          |
 
 ---
