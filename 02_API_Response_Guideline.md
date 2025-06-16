@@ -18,13 +18,16 @@ Chuẩn hóa định dạng phản hồi của tất cả API trong hệ thống
 ```json
 {
   "success": true,
-  "code": "USR_200",
-  "message": "Thành công",
   "data": {
     "userId": 123,
     "username": "john.doe"
   },
-  "traceId": "abc-xyz-789"
+  "error": null,
+  "meta": {
+    "request_id": "req-abc-123",
+    "trace_id": "trace-xyz-789",
+    "timestamp": "2025-06-16T09:00:00Z"
+  }
 }
 ```
 
@@ -43,9 +46,20 @@ Chuẩn hóa định dạng phản hồi của tất cả API trong hệ thống
 ```json
 {
   "success": false,
-  "code": "INVALID_OTP",
-  "message": "Mã OTP không hợp lệ hoặc đã hết hạn",
-  "traceId": "xyz-789"
+  "data": null,
+  "error": {
+    "code": "INVALID_OTP",
+    "message": "Mã OTP không hợp lệ hoặc đã hết hạn",
+    "details": {
+      "field": "sms_otp"
+    },
+    "retryable": false
+  },
+  "meta": {
+    "request_id": "req-def-456",
+    "trace_id": "trace-uvw-123",
+    "timestamp": "2025-06-16T09:01:00Z"
+  }
 }
 ```
 
