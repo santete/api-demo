@@ -27,7 +27,7 @@ Ngôn ngữ chính: **.NET Core**, tuy nhiên nguyên tắc mang tính **ngôn n
 | Hàm              | `PascalCase`   | `CalculateTotal()`, `GetUser()` |
 | Class            | `PascalCase`   | `UserService`, `TokenHandler` |
 | Conts            | `ALL_CAPS`   | `DEFAULT_TIMEOUT` |
-| Enum     | `PascalCase`   | `DefaultTimeout`, `UserType.Admin` |
+| Enum     | `PascalCase`   | `UserType.Admin` |
 | Interface        | `I` + `PascalCase`   | `IUserService`, `IMiddleware` |
 | Tên file `.cs`   | Trùng tên class| `LoginController.cs`          |
 
@@ -62,9 +62,12 @@ Ngôn ngữ chính: **.NET Core**, tuy nhiên nguyên tắc mang tính **ngôn n
 ## 🎨 4. Format code
 
 - ✅ 4 space indent
+- ✅ Có khoảng trắng sau dấu phẩy, toán tử, và giữa các khối logic
 - ✅ Mỗi file chỉ nên chứa 1 class chính
 - ❌ Không dùng cả tab và space
 - ✅ Dùng `dotnet format` để đảm bảo format nhất quán
+- ✅ Sắp xếp theo thứ tự: `Fields → Constructors → Properties → Methods`
+- ✅ Dùng `regions` để nhóm logic nếu file dài
 - ✅ `{` xuống dòng (C# style)
 
 ---
@@ -110,7 +113,14 @@ refactor(session): gom nhỏ logic khởi tạo session
 
 ---
 
-## 💪 8. Testing
+## 🧠 8. Nguyên tắc thiết kế
+- ✅ Áp dụng `SOLID, DRY, KISS, YAGNI`
+- ✅ Ưu tiên `interface` thay vì class cụ thể
+- ✅ Dùng `Dependency Injection`
+
+---
+
+## 💪 9. Testing
 
 - ✅ Mỗi service nên có ít nhất 1 unit test
 - ✅ Dùng mock repository
@@ -118,74 +128,16 @@ refactor(session): gom nhỏ logic khởi tạo session
 
 ---
 
-## 📤 9. Chuẩn hóa phản hồi API
+## 📤 10. Chuẩn hóa phản hồi API
 
-### ✅ 9.1 Success Response
-
-```json
-{
-  "success": true,
-  "code": "USR_200",
-  "message": "Thành công",
-  "data": { ... },
-  "traceId": "abc-xyz-789"
-}
-```
-
-| Trường     | Bắt buộc | Mô tả                                    |
-|------------|----------|-------------------------------------------|
-| success    | ✅       | Luôn là `true` khi thành công             |
-| code       | ✅       | Mã phản hồi nội bộ                        |
-| message    | ✅       | Nội dung mô tả dễ hiểu                    |
-| data       | ✅       | Payload trả về (object / array / null)    |
-| traceId    | 🔁       | Mã để trace log toàn hệ thống             |
-
-### 🔁 Ví dụ với phân trang:
-
-```json
-{
-  "success": true,
-  "code": "USR_200",
-  "message": "Danh sách người dùng",
-  "data": [...],
-  "metadata": {
-    "page": 1,
-    "pageSize": 20,
-    "total": 100
-  },
-  "traceId": "xyz-456"
-}
-```
-
----
-
-### ❌ 9.2 Error Response
-
-```json
-{
-  "success": false,
-  "code": "AUTH_401",
-  "message": "Không có quyền truy cập",
-  "traceId": "abc-123"
-}
-```
-
-| Trường     | Bắt buộc | Mô tả                                       |
-|------------|----------|----------------------------------------------|
-| success    | ✅       | Luôn là `false` khi lỗi                     |
-| code       | ✅       | Mã lỗi nội bộ chuẩn (`AUTH_401`, `REQ_400`) |
-| message    | ✅       | Mô tả lỗi rõ ràng                           |
-| traceId    | 🔁       | Dùng để trace log                           |
-
-> 📌 Nên trả toàn bộ qua middleware  
-> 📌 Không dùng HTTP status code thô để phân biệt lỗi nghiệp vụ
+### ✅ Tham khảo tài liệu `API_Response_Guideline.md`
 
 ---
 
 ## 📌 SUMMARY
 
 - ✅Áp dụng cho toàn bộ các team nội bộ tại FPT, ưu tiên các dự án sử dụng .NET 6+ và triển khai CI/CD, DevSecOps.
-- ✅ Mọi project backend đều cần `README.md`, `ERROR_CODES.md`, `api-guideline.md`
+- ✅ Mọi project backend đều cần `README.md`, `ERROR_CODES.md`, `API_RESPONSE_GUIDELINE.md`
 - ✅ Tạo repo backend: phải có `docs/` để QA và Dev follow
 - ✅ 🌟**Tài liệu này cần được đính kèm trong repo dưới tên `CODING_CONVENTIONS.md` để các thành viên tuân thủ.**
 
