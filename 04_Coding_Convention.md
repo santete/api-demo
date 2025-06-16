@@ -99,7 +99,7 @@ i++;
 | ❌ Không log dữ liệu nhạy cảm | Ví dụ: email, token, password                  |
 | ✅ Validate input đầy đủ | Không tin tưởng FE gửi                            |
 | ❌ Không throw exception thô | Gói lại, log rõ nội bộ                         |
-| ✅ Dùng middleware handle error | Trả `traceId`, log chi tiết nếu cần         |
+| ✅ Dùng middleware handle error | Trả `trace_id`, log chi tiết nếu cần         |
 
 ---
 
