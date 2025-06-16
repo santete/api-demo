@@ -178,6 +178,21 @@ OTP sai, tài khoản bị khóa, vi phạm điều kiện...
   
 ---
 
+📌 Kết luận
+Một response API nhất quán nên:
+
+Chuẩn hóa cấu trúc (success, data, error, meta)
+
+Sử dụng đúng HTTP Status Code
+
+Có error code rõ ràng
+
+Có request_id để trace
+
+Phân biệt lỗi retry / không retry
+
+Không tiết lộ lỗi nội bộ
+
 
 ## 📚 Tài liệu liên quan
 
