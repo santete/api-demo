@@ -217,6 +217,7 @@ OTP sai, tài khoản bị khóa, vi phạm điều kiện...
 | Luôn có `trace_id` trong mọi response                   | ✅         | Dùng để trace log & monitoring              |
 | Dùng `code` từ `error_codes.md`                        | ✅         | Không tự đặt mã lỗi                         |
 | Không trả HTTP 200 nếu là lỗi kỹ thuật                 | ✅         | Chỉ có thể 200 cho lỗi nghiệp vụ              |
+> ❌ Tránh nhầm lẫn giữa mã lỗi 404 not found và lỗi không tìm thấy dữ liệu trong nghiệp vụ
 
 ---
 
