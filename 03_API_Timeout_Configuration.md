@@ -71,9 +71,9 @@ API_TIMEOUT_PAYMENT=2000 # ms
 }
 ```
 
-## ✅ 7. Giao tiếp timeout giữa các service theo chuẩn
-Dùng AbortController (JS), Context.WithTimeout (Go), CancellationToken (.NET)
-Truyền theo header:
+✅ 7. Giao tiếp timeout giữa các service theo chuẩn
+- Dùng AbortController (JS), Context.WithTimeout (Go), CancellationToken (.NET)
+- Truyền theo header:
 ```yaml
 X-Request-Timeout: 2000
 ```
