@@ -55,6 +55,7 @@
 Ví dụ:
 ```env
 API_TIMEOUT_PAYMENT=2000 # ms
+```
 
 ## ✅ 6. Phản hồi rõ ràng khi timeout xảy ra
 ```json
